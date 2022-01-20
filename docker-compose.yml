@@ -1,0 +1,31 @@
+version: "3.9"
+
+volumes:
+  postgres:
+    name: postgres
+
+services:
+  postgresql:
+    image: postgres:alpine3.15
+    hostname: postgresql
+    environment:
+      - POSTGRES_USER=bn_keycloak
+      - POSTGRES_PASSWORD=thomas
+      - POSTGRES_DB=bitnami_keycloak
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+  keycloak:
+    image: bitnami/keycloak:latest
+    environment:
+      - KEYCLOAK_CREATE_ADMIN_USER = true
+      - KEYCLOAK_ADMIN_USER = thomas
+      - KEYCLOAK_ADMIN_PASSWORD = thomas
+      - KEYCLOAK_HTTP_PORT=8080
+      - KEYCLOAK_DATABASE_PASSWORD=thomas
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgresql
