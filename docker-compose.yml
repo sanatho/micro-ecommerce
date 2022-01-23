@@ -9,9 +9,9 @@ services:
     image: postgres:alpine3.15
     hostname: postgresql
     environment:
-      - POSTGRES_USER=bn_keycloak
+      - POSTGRES_USER=thomas
       - POSTGRES_PASSWORD=thomas
-      - POSTGRES_DB=bitnami_keycloak
+      - POSTGRES_DB=microecommerce
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
       - postgres:/var/lib/postgresql/data
@@ -20,6 +20,7 @@ services:
   keycloak:
     image: bitnami/keycloak:latest
     environment:
+      - KEYCLOAK_DATABASE_NAME = microecommerce
       - KEYCLOAK_CREATE_ADMIN_USER = true
       - KEYCLOAK_ADMIN_USER = thomas
       - KEYCLOAK_ADMIN_PASSWORD = thomas
