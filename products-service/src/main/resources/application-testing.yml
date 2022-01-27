@@ -1,0 +1,21 @@
+spring:
+  application:
+    name: products-service
+  datasource:
+    url: jdbc:h2:mem:test
+    driverClassName: org.h2.Driver
+    username: sa
+    password: password
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+  flyway:
+    enabled: false
+server:
+  port: 8081
+
+eureka:
+  client:
+    enabled: false
+

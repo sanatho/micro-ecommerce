@@ -3,6 +3,8 @@ version: "3.9"
 volumes:
   postgres:
     name: postgres
+  keycloak:
+    name: keycloak
 
 services:
   postgresql:
