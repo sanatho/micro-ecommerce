@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -48,19 +47,25 @@ public class ProductService {
 
     }
 
-    @Transactional
+
     public Product editProduct(Product product, Integer productId) {
 
         Optional<Product> originalProduct = productRepository.findById(productId);
 
         if(originalProduct.isPresent()){
             Product newProduct = Product.builder()
+                    .product_id(productId)
                     .model(product.getModel())
                     .category_name(product.getCategory_name())
                     .brand_name(product.getBrand_name())
                     .price(product.getPrice())
                     .stock(product.getStock())
                     .build();
+
+            productRepository.save(newProduct);
+            log.info("Product {} updated with new info {}", productId, newProduct);
+        }else{
+            log.warn("Product with id {} not exist", productId);
         }
 
         return null;
