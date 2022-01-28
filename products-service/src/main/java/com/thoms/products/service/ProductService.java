@@ -1,7 +1,5 @@
 package com.thoms.products.service;
 
-import com.thoms.products.entity.Brand;
-import com.thoms.products.entity.Category;
 import com.thoms.products.entity.Product;
 import com.thoms.products.repository.BrandRepository;
 import com.thoms.products.repository.CategoryRepository;
@@ -26,7 +24,19 @@ public class ProductService {
     }
 
     public Product getProduct(Integer productId) {
-        return productRepository.findById(productId).get();
+
+        boolean existsById = productRepository.existsById(productId);
+
+        if(existsById){
+            log.info("Product with id {} exist", productId);
+
+            Product productById = productRepository.getById(productId);
+
+            return productById;
+        }else{
+            log.info("Product with id {} not exist", productId);
+            throw new IllegalArgumentException("Product with id " + productId + "not exist");
+        }
     }
 
     public Product saveProduct(Product product) {
@@ -34,16 +44,14 @@ public class ProductService {
         return productRepository.save(product);
     }
 
-    public Product deleteProduct(Integer productId) {
+    public void deleteProduct(Integer productId) {
 
-        Optional<Product> deleteProduct = productRepository.findById(productId);
-
-        if(deleteProduct.isPresent()){
-            productRepository.delete(deleteProduct.get());
-            return deleteProduct.get();
+        if(productRepository.existsById(productId)){
+            productRepository.deleteById(productId);
+            return;
+        }else{
+            throw new IllegalArgumentException("Product with id " + productId + " not exist");
         }
-
-        return null;
 
     }
 
@@ -66,6 +74,7 @@ public class ProductService {
             log.info("Product {} updated with new info {}", productId, newProduct);
         }else{
             log.warn("Product with id {} not exist", productId);
+            throw new IllegalArgumentException("Product with id " + productId + " not exist");
         }
 
         return null;
@@ -73,10 +82,8 @@ public class ProductService {
 
     public List<Product> findByCategory(String category) {
 
-        Optional<Category> categorySearched = categoryRepository.findById(category);
-
-        if(categorySearched.isPresent()){
-            log.info("Categoria trovata {}", categorySearched.get());
+        if(categoryRepository.existsById(category)){
+            log.info("Categoria trovata {}", category);
             return productRepository.findProductByCategoryName(category);
         }else{
             throw new IllegalArgumentException("This category not exist!");
@@ -86,10 +93,8 @@ public class ProductService {
 
     public List<Product> findByBrand(String brand) {
 
-        Optional<Brand> brandSearched = brandRepository.findById(brand);
-
-        if(brandSearched.isPresent()){
-            log.info("Brand trovata {}", brandSearched.get());
+        if(brandRepository.existsById(brand)){
+            log.info("Brand trovata {}", brand);
             return productRepository.findProductByBrandName(brand);
         }else{
             throw new IllegalArgumentException("This brand not exist!");
@@ -99,15 +104,11 @@ public class ProductService {
 
     public Integer getStock(Integer productId) {
 
-        Optional<Product> productSearched = productRepository.findById(productId);
-
-        if(productSearched.isPresent()){
-            return productSearched.get().getStock();
+        if(productRepository.existsById(productId)){
+            return productRepository.findById(productId).get().getStock();
         }else{
             log.info("Product with id {} not exist", productId);
+            throw new IllegalArgumentException("Product with id " + productId + " not exist");
         }
-
-        return -1;
-
     }
 }
