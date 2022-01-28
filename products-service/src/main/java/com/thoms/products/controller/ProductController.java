@@ -29,9 +29,9 @@ public class ProductController {
         return productService.saveProduct(product);
     }
 
-    @DeleteMapping("/productId")
-    public Product deleteProduct(@PathVariable("productId") Integer productId){
-        return productService.deleteProduct(productId);
+    @DeleteMapping("/{productId}")
+    public void deleteProduct(@PathVariable("productId") Integer productId){
+        productService.deleteProduct(productId);
     }
 
     @PatchMapping("/{productId}")
