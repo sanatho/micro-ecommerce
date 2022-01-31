@@ -72,9 +72,9 @@ class ProductControllerTest {
     void getAllProducts() throws Exception {
 
         ResultActions resultActions =
-                mockMvc.perform(get("/api/v1/product"));
+                mockMvc.perform(get("/api/v1/product/"));
 
-        resultActions.andExpect(status().isOk());
+        resultActions.andExpect(status().isUnauthorized());
 
     }
 
