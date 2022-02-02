@@ -35,6 +35,16 @@ class ProductServiceTest {
 
     private ProductService productService;
 
+    Product testProduct =
+            new Product(3, "MacBook Air", 800, 50, "Computer", "Apple");
+
+    Product originalProduct =
+            new Product(3, "MacBook Air", 800, 50, "Computer", "Apple");
+
+    Product editedProduct =
+            new Product(3, "MacBook Pro 13", 800, 50, "Computer", "Apple");
+
+
     @BeforeEach
     void setUp() {
         productService =
@@ -78,9 +88,6 @@ class ProductServiceTest {
     @Test
     @DisplayName("Save new product")
     void saveProduct() {
-
-        Product testProduct =
-                new Product(3, "MacBook Air", 800, 50, "Computer", "Apple");
 
         productService.saveProduct(testProduct);
 
@@ -129,12 +136,6 @@ class ProductServiceTest {
 
         Integer id = 3;
 
-        Product originalProduct =
-                new Product(3, "MacBook Air", 800, 50, "Computer", "Apple");
-
-        Product editedProduct =
-                new Product(3, "MacBook Pro 13", 800, 50, "Computer", "Apple");
-
         given(productRepository.findById(3)).willReturn(Optional.of(originalProduct));
 
         productService.editProduct(editedProduct, id);
@@ -153,8 +154,6 @@ class ProductServiceTest {
     void editProductThatNotExist() {
 
         Integer id = 3;
-        Product editedProduct =
-                new Product(3, "MacBook Pro 13", 800, 50, "Computer", "Apple");
 
         given(productRepository.findById(id)).willReturn(Optional.empty());
 
@@ -222,9 +221,6 @@ class ProductServiceTest {
     void getStockForProductThatExist() {
 
         Integer id = 3;
-        Product testProduct =
-                new Product(3, "MacBook Pro 13", 800, 50, "Computer", "Apple");
-
 
         given(productRepository.existsById(id)).willReturn(true);
         given(productRepository.findById(id)).willReturn(Optional.of(testProduct));
