@@ -33,3 +33,6 @@ build/
 ### VS Code ###
 .vscode/
 medium_article
+realm/**
+/realm/**
+realm/realm-export.json

@@ -12,6 +12,7 @@
         <module>eureka-discovery-service</module>
         <module>products-service</module>
         <module>clients</module>
+        <module>cart-service</module>
     </modules>
 
 

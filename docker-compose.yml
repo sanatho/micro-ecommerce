@@ -1,5 +1,9 @@
 version: "3.9"
 
+networks:
+  test:
+    driver: bridge
+
 volumes:
   postgres:
     name: postgres
@@ -33,6 +37,8 @@ services:
       - microecommerce:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    networks:
+      - test
   keycloak:
     image: bitnami/keycloak:latest
     environment:
@@ -48,3 +54,14 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    environment:
+      PGADMIN_DEFAULT_EMAIL: test@test.com
+      PGADMIN_DEFAULT_PASSWORD: 1234
+      PGADMIN_CONFIG_SERVER_MODE: 'False'
+    ports:
+      - "5050:80"
+    networks:
+      - test
