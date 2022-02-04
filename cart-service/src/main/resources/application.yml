@@ -2,9 +2,9 @@ spring:
   application:
     name: cart-service
   datasource:
-    username: thomas
-    password: thomas
-    url: jdbc:postgresql://localhost:5433/microecommerce
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/cart
   jpa:
     hibernate:
       ddl-auto: none

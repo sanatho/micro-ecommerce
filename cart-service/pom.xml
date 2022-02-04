@@ -14,9 +14,9 @@
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <flyway.url>jdbc:postgresql://localhost:5432/microecommerce</flyway.url>
-        <flyway.user>thomas</flyway.user>
-        <flyway.password>thomas</flyway.password>
+        <flyway.url>jdbc:postgresql://localhost:5432/cart</flyway.url>
+        <flyway.user>postgres</flyway.user>
+        <flyway.password>postgres</flyway.password>
         <keycloak.version>15.1.1</keycloak.version>
     </properties>
 
