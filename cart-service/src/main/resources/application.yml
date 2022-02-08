@@ -30,3 +30,9 @@ keycloak:
   resource: spring-microservice-products
   public-client: true
   bearer-only: true
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full

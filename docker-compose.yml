@@ -1,16 +1,10 @@
 version: "3.9"
 
-networks:
-  test:
-    driver: bridge
-
 volumes:
-  postgres:
-    name: postgres
   keycloak:
     name: keycloak
-  microecommerce:
-    name: microecommerce
+  postgres:
+    name: postgres
 
 services:
   postgresql:
@@ -25,20 +19,20 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-  microecommerce:
-    image: postgres:alpine3.15
-    hostname: microecommerce
-    environment:
-      - POSTGRES_DB=microecommerce
-      - POSTGRES_USER=thomas
-      - POSTGRES_PASSWORD=thomas
-      - PGDATA=/var/lib/postgresql/data/pgdata
-    volumes:
-      - microecommerce:/var/lib/postgresql/data
-    ports:
-      - "5433:5432"
-    networks:
-      - test
+#  microecommerce:
+#    image: postgres:alpine3.15
+#    hostname: microecommerce
+#    environment:
+#      - POSTGRES_DB=microecommerce
+#      - POSTGRES_USER=thomas
+#      - POSTGRES_PASSWORD=thomas
+#      - PGDATA=/var/lib/postgresql/data/pgdata
+#    volumes:
+#      - microecommerce:/var/lib/postgresql/data
+#    ports:
+#      - "5433:5432"
+#    networks:
+#      - test
   keycloak:
     image: bitnami/keycloak:latest
     environment:
@@ -54,14 +48,3 @@ services:
     container_name: zipkin
     ports:
       - "9411:9411"
-  pgadmin:
-    container_name: pgadmin
-    image: dpage/pgadmin4
-    environment:
-      PGADMIN_DEFAULT_EMAIL: test@test.com
-      PGADMIN_DEFAULT_PASSWORD: 1234
-      PGADMIN_CONFIG_SERVER_MODE: 'False'
-    ports:
-      - "5050:80"
-    networks:
-      - test

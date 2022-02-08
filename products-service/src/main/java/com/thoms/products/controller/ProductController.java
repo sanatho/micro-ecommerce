@@ -22,7 +22,7 @@ public class ProductController {
     }
 
     @GetMapping("/")
-    @RolesAllowed("admin")
+//    @RolesAllowed("admin")
     public List<Product> getAllProducts(){
         return productService.getAllProducts();
     }
