@@ -19,20 +19,6 @@ services:
       - postgres:/var/lib/postgresql/data
     ports:
       - "5432:5432"
-#  microecommerce:
-#    image: postgres:alpine3.15
-#    hostname: microecommerce
-#    environment:
-#      - POSTGRES_DB=microecommerce
-#      - POSTGRES_USER=thomas
-#      - POSTGRES_PASSWORD=thomas
-#      - PGDATA=/var/lib/postgresql/data/pgdata
-#    volumes:
-#      - microecommerce:/var/lib/postgresql/data
-#    ports:
-#      - "5433:5432"
-#    networks:
-#      - test
   keycloak:
     image: bitnami/keycloak:latest
     environment:

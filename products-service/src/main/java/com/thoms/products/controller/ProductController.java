@@ -16,7 +16,7 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/{productId}")
-    @RolesAllowed("user")
+//    @RolesAllowed("user")
     public Product getProduct(@PathVariable("productId") Integer productId){
         return productService.getProduct(productId);
     }
@@ -28,40 +28,46 @@ public class ProductController {
     }
 
     @PostMapping
-    @RolesAllowed("admin")
+//    @RolesAllowed("admin")
     public Product saveProduct(@RequestBody Product product){
         return productService.saveProduct(product);
     }
 
     @DeleteMapping("/{productId}")
-    @RolesAllowed("admin")
+//    @RolesAllowed("admin")
     public void deleteProduct(@PathVariable("productId") Integer productId){
         productService.deleteProduct(productId);
     }
 
     @PatchMapping("/{productId}")
-    @RolesAllowed("admin")
+//    @RolesAllowed("admin")
     public Product editProduct(@RequestBody Product product,
                                @PathVariable("productId") Integer productId){
         return productService.editProduct(product, productId);
     }
 
     @GetMapping("/category/{category}")
-    @RolesAllowed("user")
+//    @RolesAllowed("user")
     public List<Product> findByCategory(@PathVariable("category") String category){
         return productService.findByCategory(category);
     }
 
     @GetMapping("/brand/{brand}")
-    @RolesAllowed("user")
+//    @RolesAllowed("user")
     public List<Product> findByBrand(@PathVariable("brand") String brand){
         return productService.findByBrand(brand);
     }
 
     @GetMapping("/stock/{product_id}")
-    @RolesAllowed("user")
+//    @RolesAllowed("user")
     public Integer getStock(@PathVariable("product_id") Integer product_id){
         return productService.getStock(product_id);
+    }
+
+    @GetMapping("/admin")
+//    @RolesAllowed("admin")
+    public boolean isAdminUser(){
+        return true;
     }
 
 }

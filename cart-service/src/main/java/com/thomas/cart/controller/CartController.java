@@ -10,7 +10,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/cart/")
@@ -22,8 +25,8 @@ public class CartController {
 
     @GetMapping
     public List<Product> testingFeignClient(HttpServletRequest request){
-        //TODO sistemare jwt attraverso feign client
         return productClient.getAllProducts();
     }
+
 
 }

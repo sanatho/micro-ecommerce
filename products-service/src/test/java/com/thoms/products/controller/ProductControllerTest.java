@@ -3,6 +3,7 @@ package com.thoms.products.controller;
 import com.thoms.products.entity.Product;
 import com.thoms.products.repository.ProductRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -50,12 +51,13 @@ class ProductControllerTest {
     }
 
     @Test
+//    @Disabled
     void getAllProducts() throws Exception {
 
         ResultActions resultActions =
                 mockMvc.perform(get("/api/v1/product/"));
 
-        resultActions.andExpect(status().isUnauthorized());
+        resultActions.andExpect(status().isOk());
 
     }
 
