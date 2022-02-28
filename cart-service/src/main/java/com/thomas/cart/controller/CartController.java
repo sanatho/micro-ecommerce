@@ -25,7 +25,10 @@ public class CartController {
 
     @GetMapping
     public List<Product> testingFeignClient(HttpServletRequest request){
-        return productClient.getAllProducts();
+        String access_token = "Bearer ";
+        access_token += request.getParameter("access_token");
+        log.info("Token is Bearer {}", access_token);
+        return productClient.getAllProducts(access_token);
     }
 
 

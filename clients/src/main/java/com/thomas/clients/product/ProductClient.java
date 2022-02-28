@@ -16,7 +16,7 @@ public interface ProductClient {
         public Product getProduct(@PathVariable("productId") Integer productId);
 
         @GetMapping("/")
-        List<Product> getAllProducts();
+        List<Product> getAllProducts(@RequestHeader("Authorization") String jwtToken);
 
         @PostMapping
         public Product saveProduct(@RequestBody Product product);

@@ -3,13 +3,16 @@ package com.thoms.products.controller;
 import com.thoms.products.entity.Product;
 import com.thoms.products.service.ProductService;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.security.RolesAllowed;
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/product")
+@Slf4j
 @AllArgsConstructor
 public class ProductController {
 
@@ -22,8 +25,10 @@ public class ProductController {
     }
 
     @GetMapping("/")
-//    @RolesAllowed("admin")
-    public List<Product> getAllProducts(){
+    @RolesAllowed("admin")
+    public List<Product> getAllProducts(HttpServletRequest request){
+        String authorization = request.getHeader("Authorization");
+        log.info("Received header with jwt is {}", authorization);
         return productService.getAllProducts();
     }
 
