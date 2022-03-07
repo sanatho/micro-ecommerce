@@ -22,6 +22,7 @@ services:
   keycloak:
     image: bitnami/keycloak:latest
     environment:
+      - KEYCLOAK_DATABASE_PORT=5432
       - KEYCLOAK_DATABASE_NAME=microecommerce
       - KEYCLOAK_DATABASE_USER=thomas
       - KEYCLOAK_DATABASE_PASSWORD=thomas
