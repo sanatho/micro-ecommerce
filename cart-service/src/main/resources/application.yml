@@ -1,10 +1,10 @@
 spring:
   application:
-    name: products-service
+    name: cart-service
   datasource:
     username: postgres
     password: postgres
-    url: jdbc:postgresql://localhost:5433/products
+    url: jdbc:postgresql://localhost:5433/cart
   jpa:
     hibernate:
       ddl-auto: none
@@ -15,7 +15,7 @@ spring:
   zipkin:
     base-url: http://localhost:9411
 server:
-  port: 8081
+  port: 8082
 
 eureka:
   client:
@@ -30,3 +30,9 @@ keycloak:
   resource: spring-microservice-products
   public-client: true
   bearer-only: true
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full

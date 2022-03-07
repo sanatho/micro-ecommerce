@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS Cart(
+    id SERIAL PRIMARY KEY,
+    product_id INTEGER NOT NULL,
+    user_id VARCHAR NOT NULL,
+    quantity INTEGER NOT NULL
+);

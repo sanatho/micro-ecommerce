@@ -1,4 +1,4 @@
-package com.thoms.products;
+package com.thomas.cart;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -7,9 +7,9 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 
 @SpringBootApplication
 @EnableEurekaClient
-@EnableFeignClients
-public class ProductsApplication {
+@EnableFeignClients(basePackages = "com.thomas.clients.product")
+public class CartApplication {
     public static void main(String[] args) {
-        SpringApplication.run(ProductsApplication.class, args);
+        SpringApplication.run(CartApplication.class, args);
     }
 }

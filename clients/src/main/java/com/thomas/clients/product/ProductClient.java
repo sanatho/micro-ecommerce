@@ -1,20 +1,22 @@
-package com.thomas.clients.product.entity;
+package com.thomas.clients.product;
 
+import com.thomas.clients.product.entity.Product;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @FeignClient(
         name = "product",
-        url = "http://PRODUCTS-SERVICE"
+        url = "http://localhost:8081"
 )
+@RequestMapping("/api/v1/product")
 public interface ProductClient {
 
         @GetMapping("/{productId}")
         public Product getProduct(@PathVariable("productId") Integer productId);
 
         @GetMapping("/")
-        public List<Product> getAllProducts();
+        List<Product> getAllProducts(@RequestHeader("Authorization") String jwtToken);
 
         @PostMapping
         public Product saveProduct(@RequestBody Product product);
