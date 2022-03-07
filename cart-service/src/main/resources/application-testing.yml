@@ -14,7 +14,7 @@ spring:
     serialization:
       FAIL_ON_EMPTY_BEANS: false
   flyway:
-    enabled: false
+    enabled: true
 server:
   port: 8081
 

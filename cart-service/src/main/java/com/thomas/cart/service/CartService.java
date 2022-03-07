@@ -26,7 +26,7 @@ public class CartService {
         log.info("add item {} to cart", productId);
         log.info("userID is {}", userID);
 
-        if(userID == null){
+        if(userID == null || userID == ""){
             log.error("User id not valid");
             throw new IllegalArgumentException("User id not valid");
         }
@@ -42,7 +42,6 @@ public class CartService {
         }
 
         if(!isProductInStock(productId, quantity)){
-            //TODO update stock after buy
             log.warn("Product out of stock");
             throw new IllegalArgumentException("Product out of stock");
         }
@@ -53,14 +52,15 @@ public class CartService {
     }
 
     private boolean isProductIdValid(Integer productId){
+		Product product = null;
         try{
-            log.info("Before fetching product");
-            Product product = productClient.getProduct(productId);
-            log.info("Product fetched successfully");
-            return true;
+            product = productClient.getProduct(productId);
+            log.info("Product id fetched successfully");
         }catch (Exception exception){
-            return false;
+            log.error("error while fetching product id");
         }
+
+		return product != null;
     }
 
     private boolean isProductInStock(Integer productId, int quantity){
@@ -68,10 +68,8 @@ public class CartService {
         Integer stock = 0;
 
         try{
-            log.info("Before fetching product");
             stock = productClient.getStock(productId);
-            log.info("Product fetched successfully");
-            return true;
+            log.info("Product stock fetched successfully");
         }catch (Exception exception){
             log.error("Error fetching stock");
         }
