@@ -6,8 +6,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @FeignClient(
-        name = "product",
-        url = "http://localhost:8081"
+        name = "products-service"
 )
 @RequestMapping("/api/v1/product")
 public interface ProductClient {
@@ -16,7 +15,7 @@ public interface ProductClient {
         public Product getProduct(@PathVariable("productId") Integer productId);
 
         @GetMapping("/")
-        List<Product> getAllProducts(@RequestHeader("Authorization") String jwtToken);
+        List<Product> getAllProducts();
 
         @PostMapping
         public Product saveProduct(@RequestBody Product product);
