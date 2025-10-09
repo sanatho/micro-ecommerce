@@ -7,7 +7,11 @@ import com.thomas.clients.product.ProductClient;
 import com.thomas.clients.product.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Optional;
 
 @Service @Slf4j
 @AllArgsConstructor
@@ -20,8 +24,6 @@ public class CartService {
 
         int productId = cartRequest.getProductId();
         int quantity = cartRequest.getQuantity();
-
-        userID = userID.replace("\"", "");
 
         log.info("add item {} to cart", productId);
         log.info("userID is {}", userID);
@@ -77,4 +79,37 @@ public class CartService {
         return stock > quantity;
     }
 
+    public void removeItem(Integer id, String sub) {
+
+        Optional<Cart> getCartElement = cartRepository.findById(id);
+
+        getCartElement.ifPresent(cart -> {
+           if (!cart.getUserId().equals(sub)) {
+               log.error("Cart id not associate to you");
+               throw new IllegalArgumentException("Cart id not associate to you");
+           }
+        });
+
+        cartRepository.deleteById(id);
+    }
+
+    public void editCart(CartRequest cartRequest, String jwt) {
+        // Utilizzo tecnica find -> edit -> save perchè fa update della row
+        List<Cart> cartElement = cartRepository.findByUserIdAndProductIdAndQuantity(jwt, cartRequest.getProductId(), cartRequest.getQuantity());
+
+        if(cartElement == null){
+            log.error("Cart not found");
+            throw new IllegalArgumentException("Cart not found");
+        }
+
+        Cart cart = cartElement.get(0);
+
+        if(!isProductInStock(cartRequest.getProductId(), cartRequest.getQuantity())){
+            log.error("Product out of stock");
+            throw new IllegalArgumentException("Product out of stock");
+        }
+
+        cart.setQuantity(cartRequest.getQuantity());
+        cartRepository.save(cart);
+    }
 }

@@ -2,10 +2,7 @@ package com.thomas.cart.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -19,13 +16,15 @@ public class Cart {
             generator = "cart_id_seq"
     )
     private Integer id;
-    private Integer product_id;
-    private String user_id;
+    @Column(name = "product_id")
+    private Integer productId;
+    @Column(name = "user_id")
+    private String userId;
     private Integer quantity;
 
-    public Cart(Integer product_id, String user_id, Integer quantity) {
-        this.product_id = product_id;
-        this.user_id = user_id;
+    public Cart(Integer productId, String userId, Integer quantity) {
+        this.productId = productId;
+        this.userId = userId;
         this.quantity = quantity;
     }
 }
