@@ -1,5 +1,3 @@
-version: "3.9"
-
 volumes:
   keycloak:
     name: keycloak
@@ -18,20 +16,50 @@ services:
     volumes:
       - postgres:/var/lib/postgresql/data
     ports:
-      - "5432:5432"
+      - "5433:5432"
+
   keycloak:
-    image: bitnami/keycloak:latest
+    image: quay.io/keycloak/keycloak:26.1.1
+    command: start-dev
+#    command: start-dev --https-key-store-file=/etc/x509/https/ecommerce.p12 --https-key-store-password=changeit --hostname=localhost
+#    volumes:
+#      - ./realm/ecommerce.p12:/etc/x509/https/ecommerce.p12
     environment:
-      - KEYCLOAK_DATABASE_PORT=5432
-      - KEYCLOAK_DATABASE_NAME=microecommerce
-      - KEYCLOAK_DATABASE_USER=thomas
-      - KEYCLOAK_DATABASE_PASSWORD=thomas
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgresql
+      - KC_DB_URL_DATABASE=microecommerce
+      - KC_DB_USERNAME=thomas
+      - KC_DB_PASSWORD=thomas
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=AdminPass1
     ports:
       - "9090:8080"
     depends_on:
       - postgresql
+
   zipkin:
     image: openzipkin/zipkin
     container_name: zipkin
     ports:
       - "9411:9411"
+
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    depends_on:
+      - keycloak
+
+  grafana:
+    image: grafana/grafana:9.5.6
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
