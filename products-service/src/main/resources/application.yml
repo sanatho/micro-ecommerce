@@ -1,10 +1,15 @@
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://localhost:9090/realms/ecommerce
   application:
     name: products-service
   datasource:
     username: postgres
-    password: postgres
-    url: jdbc:postgresql://localhost:5433/products
+    password: 1
+    url: jdbc:postgresql://localhost:5432/products
   jpa:
     hibernate:
       ddl-auto: none
@@ -23,10 +28,3 @@ eureka:
       defaultZone: http://localhost:8761/eureka
     fetch-registry: true
     register-with-eureka: true
-
-keycloak:
-  realm: ecommerce
-  auth-server-url: http://localhost:9090/auth
-  resource: spring-microservice-products
-  public-client: true
-  bearer-only: true
