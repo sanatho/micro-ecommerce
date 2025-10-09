@@ -1,58 +1,38 @@
 package com.thomas.cart.config;
 
-import org.keycloak.adapters.springboot.KeycloakSpringBootConfigResolver;
-import org.keycloak.adapters.springsecurity.KeycloakConfiguration;
-import org.keycloak.adapters.springsecurity.authentication.KeycloakAuthenticationProvider;
-import org.keycloak.adapters.springsecurity.config.KeycloakWebSecurityConfigurerAdapter;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Import;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.core.authority.mapping.SimpleAuthorityMapper;
-import org.springframework.security.core.session.SessionRegistry;
-import org.springframework.security.core.session.SessionRegistryImpl;
-import org.springframework.security.web.authentication.session.RegisterSessionAuthenticationStrategy;
-import org.springframework.security.web.authentication.session.SessionAuthenticationStrategy;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtValidators;
+import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
+import org.springframework.security.web.SecurityFilterChain;
 
-@KeycloakConfiguration
-@EnableGlobalMethodSecurity(jsr250Enabled = true)
-@Import(KeycloakSpringBootConfigResolver.class)
-public class SecurityConfig extends KeycloakWebSecurityConfigurerAdapter
-{
-    /**
-     * Registers the KeycloakAuthenticationProvider with the authentication manager.
-     */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        KeycloakAuthenticationProvider authenticationProvider =
-                new KeycloakAuthenticationProvider();
-        authenticationProvider.setGrantedAuthoritiesMapper(new SimpleAuthorityMapper());
-        auth.authenticationProvider(authenticationProvider);
-    }
-
-    /**
-     * Defines the session authentication strategy.
-     */
-    @Bean
-    @Override
-    protected SessionAuthenticationStrategy sessionAuthenticationStrategy() {
-        return new RegisterSessionAuthenticationStrategy(buildSessionRegistry());
-    }
+@Configuration
+public class SecurityConfig {
 
     @Bean
-    protected SessionRegistry buildSessionRegistry() {
-        return new SessionRegistryImpl();
-    }
-
-    @Override
-    protected void configure(HttpSecurity http) throws Exception
-    {
-        super.configure(http);
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf().disable()
-            .authorizeRequests()
-            .anyRequest().permitAll();
+                .csrf(AbstractHttpConfigurer::disable)
+                .authorizeHttpRequests(auth -> auth
+                        .anyRequest().authenticated()
+                )
+                .oauth2ResourceServer(oauth2 -> oauth2.jwt());
+
+        return http.build();
     }
+//
+//    @Bean
+//    public JwtDecoder jwtDecoder() {
+//        // URL HTTP invece di HTTPS
+//        String issuerUri = "http://localhost:9090/realms/ecommerce";
+//        NimbusJwtDecoder jwtDecoder = NimbusJwtDecoder.withJwkSetUri(issuerUri + "/protocol/openid-connect/certs").build();
+//
+//        // Disabilita validazione issuer (solo dev!)
+//        jwtDecoder.setJwtValidator(JwtValidators.createDefaultWithIssuer(issuerUri));
+//
+//        return jwtDecoder;
+//    }
 }
