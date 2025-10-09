@@ -1,0 +1,14 @@
+Base
+-CRUD prodotti (aggiungi, aggiorna, elimina, lista).
+-Ricerca per categoria, nome, prezzo.
+-Gestione stock (incremento/decremento).
+
+Più complesse
+-Recensioni e rating utenti.
+-Gestione categorie/brand.
+-Prodotti correlati o suggeriti (anche semplice logica basata su categoria).
+-Gestione immagini prodotti (anche solo URL).
+-Coupon / Sconti promozionali: gestiti in products ma applicati in cart.
+-Event-driven update: quando un ordine è creato, il servizio orders emette un evento → products decrementa stock.
+-Audit log: log automatico delle azioni (aggiunta carrello, creazione ordine).
+Analytics basiche: quante volte un prodotto è stato aggiunto al carrello, prodotti più venduti.

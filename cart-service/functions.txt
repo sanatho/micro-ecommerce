@@ -1,0 +1,12 @@
+Base
+-Aggiungere prodotto al carrello (con quantità).
+-Rimuovere prodotto dal carrello.
+-Aggiornare quantità prodotto nel carrello.
+-Visualizzare contenuto del carrello.
+-Svuotare carrello.
+
+Più complesse
+-Carrello persistente per utente (non si perde al logout).
+-Calcolo totale con tasse e sconti (es. promozioni).
+-Sincronizzazione stock → se un prodotto non è più disponibile, rimuoverlo o notificarlo.
+-Supporto a più carrelli per utente (es. wishlist o carrelli multipli).

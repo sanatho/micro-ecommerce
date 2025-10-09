@@ -1,0 +1,11 @@
+Base
+-Creazione ordine (dal carrello).
+-Lista ordini per utente.
+-Dettagli ordine (prodotti, prezzi, data, stato).
+-Aggiornamento stato ordine (es. CREATED → PAID → SHIPPED).
+
+Più complesse
+-Storico ordini per utente.
+-Gestione annullamenti / rimborsi.
+-Notifiche (es. email o evento) quando cambia stato ordine.
+-Integrazione con un Payment Service mock (simula Stripe/PayPal).
