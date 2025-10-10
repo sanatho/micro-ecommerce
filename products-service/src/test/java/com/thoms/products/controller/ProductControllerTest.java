@@ -8,22 +8,32 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtDecoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+
+import java.util.List;
+import java.util.Map;
+
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest
 @ActiveProfiles("testing")
-@AutoConfigureMockMvc(addFilters = false) // Disabled JWT verify
+@AutoConfigureMockMvc()
 class ProductControllerTest {
-
-    // TODO con database per testing
 
     @Autowired
     private MockMvc mockMvc;
+
+    @MockBean
+    private JwtDecoder jwtDecoder;
 
     @Autowired
     private ProductRepository productRepository;
@@ -52,14 +62,22 @@ class ProductControllerTest {
     }
 
     @Test
-    @PreAuthorize("authenticated")
     void getAllProducts() throws Exception {
 
-        ResultActions resultActions =
-                mockMvc.perform(get("/api/v1/product/"));
+        // Mock JWT
+        Jwt jwt = Jwt.withTokenValue("fake-token")
+                .header("alg", "RS256")
+                .claim("username", "thomas")
+                .claim("realm_access", Map.of("roles", List.of("admin")))
+                .build();
 
-        resultActions.andExpect(status().isOk());
+        // when jwt token arrive validate jwt mock
+        when(jwtDecoder.decode(anyString())).thenReturn(jwt);
 
+        // Esegui la chiamata con Authorization header
+        mockMvc.perform(get("/api/v1/product/")
+                        .header("Authorization", "Bearer fake-token"))
+                .andExpect(status().isOk());
     }
 
     @Test

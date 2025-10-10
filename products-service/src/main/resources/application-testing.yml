@@ -22,6 +22,3 @@ eureka:
   client:
     enabled: false
 
-keycloak:
-  enabled: true
-

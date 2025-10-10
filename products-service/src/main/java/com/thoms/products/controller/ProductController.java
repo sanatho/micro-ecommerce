@@ -26,9 +26,7 @@ public class ProductController {
 
     @GetMapping("/")
 //    @RolesAllowed("admin")
-    public List<Product> getAllProducts(HttpServletRequest request){
-        String authorization = request.getHeader("Authorization");
-        log.info("Received header with jwt is {}", authorization);
+    public List<Product> getAllProducts(){
         return productService.getAllProducts();
     }
 
