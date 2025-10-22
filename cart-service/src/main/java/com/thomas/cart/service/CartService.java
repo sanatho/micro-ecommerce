@@ -90,6 +90,11 @@ public class CartService {
            }
         });
 
+        getCartElement.ifPresent(cart -> {
+            int currentQuantity = productClient.getStock(cart.getProductId());
+            cart.setQuantity(cart.getQuantity() + currentQuantity);
+        });
+
         cartRepository.deleteById(id);
     }
 
@@ -111,5 +116,9 @@ public class CartService {
 
         cart.setQuantity(cartRequest.getQuantity());
         cartRepository.save(cart);
+    }
+
+    public List<Cart> getCart(String userId) {
+        return cartRepository.findByUserId(userId);
     }
 }
