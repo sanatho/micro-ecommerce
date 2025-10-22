@@ -3,8 +3,23 @@ volumes:
     name: keycloak
   postgres:
     name: postgres
+  service:
 
 services:
+  postgresql-micro:
+    image: postgres:alpine3.15
+    hostname: postgresql
+    environment:
+      - POSTGRES_MULTIPLE_DATABASES=products,orders
+      - POSTGRES_DB=cart
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - service:/var/lib/postgresql/data
+      - ./postgres:/docker-entrypoint-initdb.d
+    ports:
+      - "5432:5432"
   postgresql:
     image: postgres:alpine3.15
     hostname: postgresql
@@ -43,23 +58,23 @@ services:
     ports:
       - "9411:9411"
 
-  prometheus:
-    image: prom/prometheus:latest
-    container_name: prometheus
-    volumes:
-      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-    ports:
-      - "9091:9090"
-    depends_on:
-      - keycloak
-
-  grafana:
-    image: grafana/grafana:9.5.6
-    container_name: grafana
-    ports:
-      - "3000:3000"
-    environment:
-      - GF_SECURITY_ADMIN_USER=admin
-      - GF_SECURITY_ADMIN_PASSWORD=admin
-    depends_on:
-      - prometheus
+#  prometheus:
+#    image: prom/prometheus:latest
+#    container_name: prometheus
+#    volumes:
+#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+#    ports:
+#      - "9091:9090"
+#    depends_on:
+#      - keycloak
+#
+#  grafana:
+#    image: grafana/grafana:9.5.6
+#    container_name: grafana
+#    ports:
+#      - "3000:3000"
+#    environment:
+#      - GF_SECURITY_ADMIN_USER=admin
+#      - GF_SECURITY_ADMIN_PASSWORD=admin
+#    depends_on:
+#      - prometheus
