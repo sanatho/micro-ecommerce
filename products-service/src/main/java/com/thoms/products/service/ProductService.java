@@ -1,6 +1,7 @@
 package com.thoms.products.service;
 
 import com.thoms.products.entity.Product;
+import com.thoms.products.entity.ProductRequest;
 import com.thoms.products.repository.BrandRepository;
 import com.thoms.products.repository.CategoryRepository;
 import com.thoms.products.repository.ProductRepository;
@@ -110,5 +111,22 @@ public class ProductService {
         }
 
         return productRepository.findById(productId).get().getStock();
+    }
+
+    public void setStock(ProductRequest product) {
+        Integer productId = product.getProductId();
+        int stock = product.getStock();
+
+        if (!productRepository.existsById(productId)) {
+            log.info("Product with id {} not exist", productId);
+            throw new IllegalArgumentException("Product with id " + productId + " not exist");
+        }
+
+        if (stock < 0) {
+            log.info("Stock cannot be negative");
+            throw new IllegalArgumentException("Stock cannot be negative");
+        }
+
+        productRepository.findById(productId).get().setStock(stock);
     }
 }

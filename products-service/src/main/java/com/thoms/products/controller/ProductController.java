@@ -1,6 +1,7 @@
 package com.thoms.products.controller;
 
 import com.thoms.products.entity.Product;
+import com.thoms.products.entity.ProductRequest;
 import com.thoms.products.service.ProductService;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -65,6 +66,12 @@ public class ProductController {
 //    @RolesAllowed("user")
     public Integer getStock(@PathVariable("product_id") Integer product_id){
         return productService.getStock(product_id);
+    }
+
+    @PostMapping("/stock/")
+//    @RolesAllowed("user")
+    public void setStock(@RequestBody ProductRequest product){
+        productService.setStock(product);
     }
 
     @GetMapping("/admin")
