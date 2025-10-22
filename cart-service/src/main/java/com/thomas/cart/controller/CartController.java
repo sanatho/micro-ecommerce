@@ -1,19 +1,16 @@
 package com.thomas.cart.controller;
 
 
-import com.fasterxml.jackson.core.JsonProcessingException;
+import com.thomas.cart.entity.Cart;
 import com.thomas.cart.entity.CartRequest;
 import com.thomas.cart.service.CartService;
-import com.thomas.cart.utility.ParseJWT;
 import com.thomas.clients.product.ProductClient;
-import com.thomas.clients.product.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 @RestController
@@ -24,12 +21,6 @@ public class CartController {
 
     private final ProductClient productClient;
     private final CartService cartService;
-
-//    @GetMapping
-//    public List<Product> testingFeignClient(@AuthenticationPrincipal Jwt jwt){
-//        log.info("JWT subject: {}", jwt.getSubject());
-//        return productClient.getAllProducts();
-//    }
 
     @PostMapping
     public void saveProduct(@RequestBody CartRequest cartRequest, @AuthenticationPrincipal Jwt jwt){
@@ -44,6 +35,11 @@ public class CartController {
     @PatchMapping
     public void editCartQuantity(@RequestBody CartRequest cartRequest, @AuthenticationPrincipal Jwt jwt){
         cartService.editCart(cartRequest, jwt.getClaim("sub"));
+    }
+
+    @GetMapping
+    public List<Cart> getCart(@AuthenticationPrincipal Jwt jwt){
+        return cartService.getCart(jwt.getClaim("sub"));
     }
 
 }
