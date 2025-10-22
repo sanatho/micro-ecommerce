@@ -2,8 +2,6 @@ package com.thoms.products.entity;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-
 @Data
 @Getter
 @Setter

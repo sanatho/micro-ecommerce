@@ -7,7 +7,6 @@ import com.thomas.clients.product.ProductClient;
 import com.thomas.clients.product.entity.Product;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
