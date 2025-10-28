@@ -1,0 +1,36 @@
+spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: http://keycloak-deploy:8080/realms/ecommerce
+  application:
+    name: cart-service
+  datasource:
+    username: postgres
+    password: 1
+    url: jdbc:postgresql://postgres-cart:5432/cart
+  jpa:
+    hibernate:
+      ddl-auto: none
+    show-sql: true
+  jackson:
+    serialization:
+      FAIL_ON_EMPTY_BEANS: false
+  zipkin:
+    base-url: http://zipkin:9411
+server:
+  port: 8082
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://eureka:8761/eureka
+    fetch-registry: true
+    register-with-eureka: true
+
+feign:
+  client:
+    config:
+      default:
+        loggerLevel: full

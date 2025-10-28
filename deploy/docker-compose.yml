@@ -1,0 +1,125 @@
+volumes:
+  postgres-cart:
+  postgres-product:
+  postgres-orders:
+  postgres-keycloak:
+
+services:
+  cart-service:
+    image: cart-service:1.0-SNAPSHOT
+    hostname: cart-service
+    ports:
+      - "8082:8082"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres-cart
+      - eureka-discovery
+      - zipkin-deploy
+
+  product-service:
+    image: products-service:1.0-SNAPSHOT
+    hostname: product-service
+    ports:
+      - "8081:8081"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres-products
+      - eureka-discovery
+      - zipkin-deploy
+
+  orders-service:
+    hostname: orders-service
+    image: orders-service:0.0.1-SNAPSHOT
+    ports:
+      - "8083:8083"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - postgres-orders
+      - eureka-discovery
+      - zipkin-deploy
+
+  eureka-discovery:
+    image: eureka-discovery-service:1.0-SNAPSHOT
+    hostname: eureka
+    ports:
+      - "8761:8761"
+
+  postgres-cart:
+    image: postgres:alpine3.15
+    hostname: postgres-cart
+    environment:
+      - POSTGRES_DB=cart
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-cart:/var/lib/postgresql/data
+    expose:
+      - "5432:5432"
+
+  postgres-products:
+    image: postgres:alpine3.15
+    hostname: postgres-product
+    environment:
+      - POSTGRES_DB=products
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-product:/var/lib/postgresql/data
+    expose:
+      - "5432:5432"
+
+  postgres-orders:
+    image: postgres:alpine3.15
+    hostname: postgres-orders
+    environment:
+      - POSTGRES_DB=orders
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=1
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-orders:/var/lib/postgresql/data
+    expose:
+      - "5432:5432"
+
+  postgresql-keycloak:
+    image: postgres:alpine3.15
+    hostname: postgresql-keycloak
+    environment:
+      - POSTGRES_DB=microecommerce
+      - POSTGRES_USER=thomas
+      - POSTGRES_PASSWORD=thomas
+      - PGDATA=/var/lib/postgresql/data/pgdata
+    volumes:
+      - postgres-keycloak:/var/lib/postgresql/data
+    expose:
+      - "5432:5432"
+
+  keycloak-deploy:
+    image: quay.io/keycloak/keycloak:26.1.1
+    hostname: keycloak
+    command: start-dev --import-realm
+    environment:
+      - KEYCLOAK_IMPORT=ecommerce-realm.json
+      - KC_DB=postgres
+      - KC_DB_URL_HOST=postgresql-keycloak
+      - KC_DB_URL_DATABASE=microecommerce
+      - KC_DB_USERNAME=thomas
+      - KC_DB_PASSWORD=thomas
+      - KEYCLOAK_ADMIN=admin
+      - KEYCLOAK_ADMIN_PASSWORD=AdminPass1
+    volumes:
+      - ./imports:/opt/keycloak/data/import
+    ports:
+      - "9090:8080"
+    depends_on:
+      - postgresql-keycloak
+
+  zipkin-deploy:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
