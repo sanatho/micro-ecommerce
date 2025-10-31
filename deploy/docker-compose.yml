@@ -5,6 +5,16 @@ volumes:
   postgres-keycloak:
 
 services:
+  gateway-service:
+    image: gateway:0.0.1-SNAPSHOT
+    hostname: gateway-service
+    ports:
+      - "8085:8085"
+    environment:
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - eureka-discovery
+
   cart-service:
     image: cart-service:1.0-SNAPSHOT
     hostname: cart-service
@@ -32,7 +42,7 @@ services:
   orders-service:
     hostname: orders-service
     image: orders-service:0.0.1-SNAPSHOT
-    ports:
+    expose:
       - "8083:8083"
     environment:
       - SPRING_PROFILES_ACTIVE=docker
@@ -111,11 +121,12 @@ services:
       - KC_DB_USERNAME=thomas
       - KC_DB_PASSWORD=thomas
       - KEYCLOAK_ADMIN=admin
-      - KEYCLOAK_ADMIN_PASSWORD=AdminPass1
+      - KEYCLOAK_ADMIN_PASSWORD=AdminPass1ù
+      - KC_LOG_LEVEL=INFO,org.hibernate:debug,org.hibernate.hql.internal.ast:info
     volumes:
       - ./imports:/opt/keycloak/data/import
     ports:
-      - "9090:8080"
+      - "8080:8080"
     depends_on:
       - postgresql-keycloak
 

@@ -36,9 +36,6 @@ services:
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.1
     command: start-dev
-#    command: start-dev --https-key-store-file=/etc/x509/https/ecommerce.p12 --https-key-store-password=changeit --hostname=localhost
-#    volumes:
-#      - ./realm/ecommerce.p12:/etc/x509/https/ecommerce.p12
     environment:
       - KC_DB=postgres
       - KC_DB_URL_HOST=postgresql
@@ -47,8 +44,9 @@ services:
       - KC_DB_PASSWORD=thomas
       - KEYCLOAK_ADMIN=admin
       - KEYCLOAK_ADMIN_PASSWORD=AdminPass1
+      - KC_LOG_LEVEL=INFO,org.hibernate:debug,org.hibernate.hql.internal.ast:info
     ports:
-      - "9090:8080"
+      - "8080:8080"
     depends_on:
       - postgresql
 
