@@ -5,6 +5,11 @@ volumes:
   postgres-keycloak:
 
 services:
+  get_token:
+    build: ./get_token
+    depends_on:
+      - keycloak-deploy
+
   gateway-service:
     image: gateway:0.0.1-SNAPSHOT
     hostname: gateway-service
