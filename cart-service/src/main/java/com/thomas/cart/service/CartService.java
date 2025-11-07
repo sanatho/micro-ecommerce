@@ -54,12 +54,9 @@ public class CartService {
 
     private boolean isProductIdValid(Integer productId){
 		Product product = null;
-        try{
-            product = productClient.getProduct(productId);
-            log.info("Product id fetched successfully");
-        }catch (Exception exception){
-            log.error("error while fetching product id");
-        }
+
+        product = productClient.getProduct(productId);
+        log.info("Product id fetched successfully");
 
 		return product != null;
     }
@@ -68,12 +65,8 @@ public class CartService {
 
         Integer stock = 0;
 
-        try{
-            stock = productClient.getStock(productId);
-            log.info("Product stock fetched successfully");
-        }catch (Exception exception){
-            log.error("Error fetching stock");
-        }
+        stock = productClient.getStock(productId);
+        log.info("Product stock fetched successfully");
 
         return stock > quantity;
     }
@@ -89,11 +82,6 @@ public class CartService {
            }
         });
 
-        getCartElement.ifPresent(cart -> {
-            int currentQuantity = productClient.getStock(cart.getProductId());
-            cart.setQuantity(cart.getQuantity() + currentQuantity);
-        });
-
         cartRepository.deleteById(id);
     }
 
@@ -101,9 +89,14 @@ public class CartService {
         // Utilizzo tecnica find -> edit -> save perchè fa update della row
         List<Cart> cartElement = cartRepository.findByUserIdAndProductIdAndQuantity(jwt, cartRequest.getProductId(), cartRequest.getQuantity());
 
-        if(cartElement == null){
+        if(cartElement.isEmpty()){
             log.error("Cart not found");
             throw new IllegalArgumentException("Cart not found");
+        }
+
+        if(cartElement.size() > 1){
+            log.error("More than one cart found");
+            throw new IllegalArgumentException("More than one cart found");
         }
 
         Cart cart = cartElement.get(0);

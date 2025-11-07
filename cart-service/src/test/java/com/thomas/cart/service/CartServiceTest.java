@@ -13,8 +13,9 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.test.context.ActiveProfiles;
 
-import java.util.UUID;
+import java.util.*;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
@@ -116,4 +117,165 @@ class CartServiceTest {
 
 		verify(cartRepository, never()).save(finalCart);
 	}
+
+    // delete element test
+    @Test
+    @DisplayName("delete existing cart item")
+    void deleteElement() {
+        Integer cartId = 3;
+        String userId = "user-123";
+        Integer productId = 10;
+
+        // cart presente nel DB
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId);
+        cart.setProductId(productId);
+        cart.setQuantity(5);
+
+        // mock del repository
+        given(cartRepository.findById(cartId)).willReturn(Optional.of(cart));
+
+        // eseguo il metodo
+        cartService.removeItem(cartId, userId);
+
+        // verifiche
+        verify(cartRepository).deleteById(cartId);
+    }
+
+    @Test
+    @DisplayName("delete cart with not valid userid")
+    void deleteElementNotValidID(){
+        Integer cartId = 3;
+        String userId = "user-123";
+        String userId2 = "user-124";
+        Integer productId = 10;
+
+        // cart presente nel DB
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId2);
+        cart.setProductId(productId);
+        cart.setQuantity(5);
+
+        // mock del repository
+        given(cartRepository.findById(cartId)).willReturn(Optional.of(cart));
+
+        assertThatThrownBy(() -> cartService.removeItem(cartId, userId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Cart id not associate to you");
+    }
+
+    // patch element test
+    // not existing element or valid quantity or valid id
+    @Test
+    @DisplayName("edit cart exist")
+    void editElement(){
+        Integer cartId = 3;
+        String userId = "user-123";
+        int productId = 10;
+        int productQuantity = 20;
+        int newProductQuantity = 10;
+        int stock = 50;
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId);
+        cart.setProductId(productId);
+        cart.setQuantity(productQuantity);
+
+        CartRequest cartRequestTest = new CartRequest(productId, newProductQuantity);
+        given(cartRepository.findByUserIdAndProductIdAndQuantity(userId, productId, newProductQuantity)).willReturn(List.of(cart));
+        given(productClient.getStock(productId)).willReturn(stock);
+        cartService.editCart(cartRequestTest, userId);
+
+        verify(cartRepository).save(cart);
+        assertThat(cart.getQuantity()).isEqualTo(newProductQuantity);
+    }
+
+    @Test
+    @DisplayName("edit cart with no valid quantity")
+    void editElementNoValidQuantity(){
+        Integer cartId = 3;
+        String userId = "user-123";
+        int productId = 10;
+        int productQuantity = 20;
+        int newProductQuantity = 10;
+        int stock = 5;
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId);
+        cart.setProductId(productId);
+        cart.setQuantity(productQuantity);
+
+        CartRequest cartRequestTest = new CartRequest(productId, newProductQuantity);
+        given(cartRepository.findByUserIdAndProductIdAndQuantity(userId, productId, newProductQuantity)).willReturn(List.of(cart));
+        given(productClient.getStock(productId)).willReturn(stock);
+
+        assertThatThrownBy(() -> cartService.editCart(cartRequestTest, userId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Product out of stock");
+    }
+
+    @Test
+    @DisplayName("edit cart that not exist")
+    void editElementThatNotExist(){
+        Integer cartId = 3;
+        String userId = "user-123";
+        int productId = 10;
+        int productQuantity = 20;
+        int newProductQuantity = 10;
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId);
+        cart.setProductId(productId);
+        cart.setQuantity(productQuantity);
+
+        CartRequest cartRequestTest = new CartRequest(productId, newProductQuantity);
+        given(cartRepository.findByUserIdAndProductIdAndQuantity(userId, productId, newProductQuantity)).willReturn(Collections.emptyList());
+
+        assertThatThrownBy(() -> cartService.editCart(cartRequestTest, userId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessageContaining("Cart not found");
+    }
+
+    @Test
+    @DisplayName("One more than cart found")
+    void oneMoreThanOneCartFound(){
+        Integer cartId = 3;
+        String userId = "user-123";
+        int productId = 10;
+        int productQuantity = 20;
+        int newProductQuantity = 10;
+        Cart cart = new Cart();
+        cart.setId(cartId);
+        cart.setUserId(userId);
+        cart.setProductId(productId);
+        cart.setQuantity(productQuantity);
+
+        List<Cart> cartList = new ArrayList<>();
+        cartList.add(cart);
+        cartList.add(cart);
+
+        CartRequest cartRequestTest = new CartRequest(productId, newProductQuantity);
+        given(cartRepository.findByUserIdAndProductIdAndQuantity(userId, productId, newProductQuantity)).willReturn(cartList);
+
+        assertThatThrownBy(() -> cartService.editCart(cartRequestTest, userId))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("More than one cart found");
+    }
+
+    // get element test
+    @Test
+    @DisplayName("get cart")
+    void getCart(){
+        Integer cartId = 3;
+        Integer productId = 3;
+        String userId = "user-123";
+        int productQuantity = 20;
+        Cart cart = new Cart(cartId, productId, userId, productQuantity);
+
+        given(cartRepository.findByUserId(userId)).willReturn(List.of(cart));
+
+        assertThat(cartService.getCart(userId)).isEqualTo(List.of(cart));
+    }
 }
