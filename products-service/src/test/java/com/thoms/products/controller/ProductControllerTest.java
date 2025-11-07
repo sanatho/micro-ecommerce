@@ -2,6 +2,7 @@ package com.thoms.products.controller;
 
 import com.thoms.products.entity.Product;
 import com.thoms.products.repository.ProductRepository;
+import com.thoms.products.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,11 @@ import java.util.Map;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.http.MediaType.APPLICATION_JSON;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*; // get(), post(), put(), delete(), ecc.
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;    // status(), content(), jsonPath(), ecc.
+import static org.mockito.Mockito.*;                                                  // when(), verify(), times(), any(), ecc.
+
 
 @SpringBootTest
 @ActiveProfiles("testing")
@@ -60,25 +64,48 @@ class ProductControllerTest {
 
     @Test
     void getAllProducts() throws Exception {
-
-        // Mock JWT
+        // 🔹 Mock JWT valido
         Jwt jwt = Jwt.withTokenValue("fake-token")
                 .header("alg", "RS256")
                 .claim("username", "thomas")
                 .claim("realm_access", Map.of("roles", List.of("admin")))
                 .build();
-
-        // when jwt token arrive validate jwt mock
         when(jwtDecoder.decode(anyString())).thenReturn(jwt);
 
-        // Esegui la chiamata con Authorization header
+        // 🔹 Chiamata HTTP reale
         mockMvc.perform(get("/api/v1/product/")
-                        .header("Authorization", "Bearer fake-token"))
-                .andExpect(status().isOk());
+                        .header("Authorization", "Bearer fake-token")
+                        .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(6))
+                .andExpect(jsonPath("$[0].product_id").value(1))
+                .andExpect(jsonPath("$[0].model").value("Nitro 5"))
+                .andExpect(jsonPath("$[0].brand_name").value("Acer"))
+                .andExpect(jsonPath("$[1].product_id").value(2))
+                .andExpect(jsonPath("$[1].brand_name").value("Razer"));
     }
 
     @Test
-    void getProduct() {
+    void getProduct() throws Exception {
+        // 🔹 Mock JWT valido
+        Jwt jwt = Jwt.withTokenValue("fake-token")
+                .header("alg", "RS256")
+                .claim("username", "thomas")
+                .claim("realm_access", Map.of("roles", List.of("admin")))
+                .build();
+        when(jwtDecoder.decode(anyString())).thenReturn(jwt);
+
+        // 🔹 Chiamata HTTP reale
+        mockMvc.perform(get("/api/v1/product/1/")
+                        .header("Authorization", "Bearer fake-token")
+                        .accept(APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(content().contentTypeCompatibleWith(APPLICATION_JSON))
+                .andExpect(jsonPath("$.length()").value(7))
+                .andExpect(jsonPath("$.product_id").value(1))
+                .andExpect(jsonPath("$.model").value("Nitro 5"))
+                .andExpect(jsonPath("$.brand_name").value("Acer"));
     }
 
     @Test
