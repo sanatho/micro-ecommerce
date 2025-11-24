@@ -22,11 +22,12 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
-        <spring.boot.maven.plugin.version>2.5.7</spring.boot.maven.plugin.version>
-        <spring.boot.dependencies.version>2.5.7</spring.boot.dependencies.version>
-        <spring.cloud-version>2020.0.3</spring.cloud-version>
+        <spring.boot.maven.plugin.version>3.5.8</spring.boot.maven.plugin.version>
+        <spring.boot.dependencies.version>3.5.8</spring.boot.dependencies.version>
+        <spring.cloud-version>2025.0.0</spring.cloud-version>
         <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
         <junit-5.version>5.2.0</junit-5.version>
+        <micrometer.version>1.14.2</micrometer.version>
     </properties>
 
     <dependencyManagement>
@@ -42,6 +43,13 @@
                 <groupId>org.springframework.cloud</groupId>
                 <artifactId>spring-cloud-dependencies</artifactId>
                 <version>${spring.cloud-version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>io.micrometer</groupId>
+                <artifactId>micrometer-bom</artifactId>
+                <version>${micrometer.version}</version>
                 <type>pom</type>
                 <scope>import</scope>
             </dependency>
@@ -65,7 +73,6 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-actuator</artifactId>
-            <version>2.6.3</version>
         </dependency>
 
     </dependencies>
