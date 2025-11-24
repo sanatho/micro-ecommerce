@@ -1,8 +1,8 @@
 package com.thomas.cart.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
 
-import javax.persistence.*;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -11,10 +11,8 @@ import javax.persistence.*;
 @ToString @Entity
 public class Cart {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO,
-            generator = "cart_id_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "cart_id_generator")
+    @SequenceGenerator(name = "cart_id_generator", sequenceName = "cart_id_seq", allocationSize = 1)
     private Integer id;
     @Column(name = "product_id")
     private Integer productId;

@@ -1,21 +1,16 @@
 package com.thoms.products.entity;
 
+import jakarta.persistence.*;
 import lombok.*;
-
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
 
 @Data @Getter @Setter
 @AllArgsConstructor @NoArgsConstructor
-@Entity @Builder
+@Entity
+@Builder
 public class Product {
     @Id
-    @GeneratedValue(
-            strategy = GenerationType.AUTO,
-            generator = "product_product_id_seq"
-    )
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "product_id_generator")
+    @SequenceGenerator(name = "product_id_generator", sequenceName = "product_id_seq", allocationSize = 1)
     private Integer product_id;
     private String model;
     private Integer price;
