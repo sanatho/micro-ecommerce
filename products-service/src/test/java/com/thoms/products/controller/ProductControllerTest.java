@@ -42,17 +42,17 @@ class ProductControllerTest {
     @BeforeEach
     void setUp() {
         Product product1 =
-                new Product(1, "Nitro 5", 1000, 10, "Elettronica e Informatica", "Acer");
+                new Product(null, "Nitro 5", 1000, 10, "Elettronica e Informatica", "Acer");
         Product product2 =
-                new Product(2, "Blade 15", 3000, 1, "Elettronica e Informatica", "Razer");
+                new Product(null, "Blade 15", 3000, 1, "Elettronica e Informatica", "Razer");
         Product product3 =
-                new Product(3, "MacBook Pro 14", 1300, 5, "Elettronica e Informatica", "Apple");
+                new Product(null, "MacBook Pro 14", 1300, 5, "Elettronica e Informatica", "Apple");
         Product product4 =
-                new Product(4, "GF63", 800, 0, "Elettronica e Informatica", "MSI");
+                new Product(null, "GF63", 800, 0, "Elettronica e Informatica", "MSI");
         Product product5 =
-                new Product(5, "Legion 5", 1700, 10, "Elettronica e Informatica", "Lenovo");
+                new Product(null, "Legion 5", 1700, 10, "Elettronica e Informatica", "Lenovo");
         Product product6 =
-                new Product(6, "1000 leghe sotto il mare", 17, 10, "Libri", "Mondadori");
+                new Product(null, "1000 leghe sotto il mare", 17, 10, "Libri", "Mondadori");
 
         productRepository.save(product1);
         productRepository.save(product2);
@@ -97,7 +97,7 @@ class ProductControllerTest {
         when(jwtDecoder.decode(anyString())).thenReturn(jwt);
 
         // 🔹 Chiamata HTTP reale
-        mockMvc.perform(get("/api/v1/product/1/")
+        mockMvc.perform(get("/api/v1/product/1")
                         .header("Authorization", "Bearer fake-token")
                         .accept(APPLICATION_JSON))
                 .andExpect(status().isOk())
