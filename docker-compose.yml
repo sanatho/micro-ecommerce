@@ -1,8 +1,8 @@
 volumes:
   keycloak:
     name: keycloak
-  postgres:
-    name: postgres
+  postgresnew:
+    name: postgresnew
   service:
 
 services:
@@ -21,7 +21,7 @@ services:
     ports:
       - "5432:5432"
   postgresql:
-    image: postgres:alpine3.15
+    image: postgres:latest
     hostname: postgresql
     environment:
       - POSTGRES_DB=microecommerce
@@ -29,14 +29,20 @@ services:
       - POSTGRES_PASSWORD=thomas
       - PGDATA=/var/lib/postgresql/data/pgdata
     volumes:
-      - postgres:/var/lib/postgresql/data
+      - postgresnew:/var/lib/postgresql/data
     ports:
       - "5433:5432"
 
   keycloak:
     image: quay.io/keycloak/keycloak:26.1.1
-    command: start-dev
+    command: start --verbose
     environment:
+      - KC_HTTP_ENABLED=true
+      - KC_METRICS_ENABLED=true
+      - KC_HEALTH_ENABLED=true
+      - KC_HOSTNAME_STRICT=false
+      - KC_MANAGEMENT_ENABLED=true
+      - KC_MANAGEMENT_PORT=9000
       - KC_DB=postgres
       - KC_DB_URL_HOST=postgresql
       - KC_DB_URL_DATABASE=microecommerce
@@ -47,6 +53,7 @@ services:
       - KC_LOG_LEVEL=INFO,org.hibernate:debug,org.hibernate.hql.internal.ast:info
     ports:
       - "8080:8080"
+      - "9000:9000"
     depends_on:
       - postgresql
 
@@ -56,23 +63,23 @@ services:
     ports:
       - "9411:9411"
 
-#  prometheus:
-#    image: prom/prometheus:latest
-#    container_name: prometheus
-#    volumes:
-#      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
-#    ports:
-#      - "9091:9090"
-#    depends_on:
-#      - keycloak
-#
-#  grafana:
-#    image: grafana/grafana:9.5.6
-#    container_name: grafana
-#    ports:
-#      - "3000:3000"
-#    environment:
-#      - GF_SECURITY_ADMIN_USER=admin
-#      - GF_SECURITY_ADMIN_PASSWORD=admin
-#    depends_on:
-#      - prometheus
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: prometheus
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+    ports:
+      - "9091:9090"
+    depends_on:
+      - keycloak
+
+  grafana:
+    image: grafana/grafana:9.5.6
+    container_name: grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - prometheus
