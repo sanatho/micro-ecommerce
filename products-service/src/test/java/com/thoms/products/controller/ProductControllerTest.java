@@ -2,7 +2,6 @@ package com.thoms.products.controller;
 
 import com.thoms.products.entity.Product;
 import com.thoms.products.repository.ProductRepository;
-import com.thoms.products.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,7 +21,6 @@ import static org.mockito.Mockito.when;
 import static org.springframework.http.MediaType.APPLICATION_JSON;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*; // get(), post(), put(), delete(), ecc.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;    // status(), content(), jsonPath(), ecc.
-import static org.mockito.Mockito.*;                                                  // when(), verify(), times(), any(), ecc.
 
 
 @SpringBootTest
