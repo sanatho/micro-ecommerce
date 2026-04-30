@@ -7,15 +7,9 @@ RED='\033[0;31m'
 NC='\033[0m'
 
 # Path Maven interno di IntelliJ
-INTELLIJ_MAVEN="/Users/thomas/Applications/IntelliJ IDEA Ultimate.app/Contents/plugins/maven/lib/maven3/bin/mvn"
+INTELLIJ_MAVEN="mvn"
 EVENT_LISTENER="/Users/thomas/Applications/IntelliJ IDEA Ultimate.app/Contents/plugins/maven/lib/maven-event-listener.jar"
 REPO_PATH="/Users/thomas/.m2/repository"
-
-# Verifica che esista Maven di IntelliJ
-if [ ! -f "$INTELLIJ_MAVEN" ]; then
-  echo -e "${RED}❌ Maven di IntelliJ non trovato a: $INTELLIJ_MAVEN${NC}"
-  exit 1
-fi
 
 # Trova tutti i moduli con pom.xml, escludendo 'clients'
 modules=$(find . -mindepth 2 -name "pom.xml" -not -path "*/clients/*" -exec dirname {} \; | sort)
