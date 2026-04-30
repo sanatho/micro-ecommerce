@@ -22,6 +22,7 @@ spring:
   flyway:
     clean-disabled: false
 server:
+  address: 0.0.0.0
   port: 8082
 
 eureka:
@@ -37,3 +38,11 @@ feign:
       default:
         loggerLevel: full
 debug: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,prometheus
+    endpoint:
+      health:
+        show-details: always
